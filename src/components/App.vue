@@ -1,14 +1,15 @@
 <template>
     <div>
-        <div>Month: {{ currentMonth }}</div>
-        <div>Days in Month: {{ daysIMonth }}</div>
-        <div class="row" v-for="day in getDaysInMonth">
+        <div v-for="week in weeks">
+            Week
+            <div v-for="day in week">
             <span v-if="day.format('YYYY-MM-DD') == currentDay">
                 <strong>{{ day.format('YYYY-MM-DD') }}</strong>
             </span>
             <span v-else>
                 {{day.format('YYYY-MM-DD')}}
             </span>
+            </div>
         </div>
     </div>
 </template>
@@ -30,10 +31,10 @@
 
         computed: {
             /**
-             * get days in month
+             * get days in month including days falling within week before/after end of month
              * @returns {Array}
              */
-            getDaysInMonth() {
+            days() {
                 let arrDays = [];
                 let startDay = 1;
                 while(startDay <= this.daysIMonth) {
@@ -51,8 +52,7 @@
 
                 let dayBeforeDayInWeek = 1;
                 while(dayBeforeDayInWeek < dayInWeek) {
-                    let dayBeforeDayInWeekObj = this.$moment(firstDayInMonth);
-                    arrDaysInWeekBeforeStartOfMonth.push(dayBeforeDayInWeekObj.subtract((dayInWeek - dayBeforeDayInWeek),"days"));
+                    arrDaysInWeekBeforeStartOfMonth.push(this.$moment(firstDayInMonth).subtract((dayInWeek - dayBeforeDayInWeek),"days"));
                     dayBeforeDayInWeek++;
                 }
 
@@ -63,13 +63,30 @@
                 let dayIncr = 1;
 
                 while(dayInWeek <= 7) {
-                    let dayAfterDayInWeekObj = this.$moment(lastDayInMonth);
-                    arrDays.push(dayAfterDayInWeekObj.add(dayIncr,"days"));
+                    arrDays.push(this.$moment(lastDayInMonth).add(dayIncr,"days"));
                     dayIncr++;
                     dayInWeek++;
                 }
 
                 return arrDays;
+            },
+            /**
+             * get all the weeks in the month
+             * @returns {Array}
+             */
+            weeks() {
+                let weeks = [];
+                let week = [];
+
+                for(let day of this.days) {
+                    week.push(day);
+                    if(week.length === 7) {
+                        weeks.push(week);
+                        week = [];
+                    }
+                }
+
+                return weeks;
             }
         }
     }
