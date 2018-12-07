@@ -3,20 +3,18 @@
         <div v-for="week in weeks">
             Week
             <div v-for="day in week">
-            <span v-if="day.format('YYYY-MM-DD') == currentDay">
-                <strong>{{ day.format('YYYY-MM-DD') }}</strong>
-            </span>
-            <span v-else>
-                {{day.format('YYYY-MM-DD')}}
-            </span>
+                <calendar-day :day="day" :currentDay="currentDay"></calendar-day>
             </div>
         </div>
     </div>
 </template>
 <script>
-
+    import CalendarDay from './CalendarDay.vue';
     export default {
         name: 'app',
+        components: {
+          CalendarDay
+        },
         data() {
             return {
                 //current month
@@ -25,7 +23,7 @@
                 daysIMonth: this.$moment().daysInMonth(),
 
                 //current day
-                currentDay: this.$moment().format('YYYY-MM-DD')
+                currentDay: this.$moment()
             };
         },
 
@@ -87,7 +85,9 @@
                 }
 
                 return weeks;
-            }
+            },
+        },
+        methods: {
         }
     }
 </script>
