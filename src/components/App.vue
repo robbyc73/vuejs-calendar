@@ -1,10 +1,17 @@
 <template>
+    <div>
+    <div id="day-bar">
+        <div v-for="day in daysInWeek">
+            {{ day }}
+        </div>
+    </div>
     <div id="calendar">
         <div  v-for="week in weeks" class="calendar-week">
-            <div class="day" v-for="day in week">
-                <calendar-day :day="day" :currentDay="currentDay"></calendar-day>
-            </div>
+            <template v-for="day in week">
+                <calendar-day :day="day"></calendar-day>
+            </template>
         </div>
+    </div>
     </div>
 </template>
 <script>
@@ -16,17 +23,23 @@
         },
         data() {
             return {
-                //current month
-                currentMonth: this.$moment().format('MMMM'),
                 //days on month
                 daysIMonth: this.$moment().daysInMonth(),
 
                 //current day
-                currentDay: this.$moment()
+                currentDay: this.$moment(),
+
+                daysInWeek: this.$moment.weekdays()
             };
         },
 
         computed: {
+            month() {
+                return this.$store.state.currentMonth;
+            },
+            year() {
+                return this.$store.state.currentYear;
+            },
             /**
              * get days in month including days falling within week before/after end of month
              * @returns {Array}

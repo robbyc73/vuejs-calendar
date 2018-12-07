@@ -1,5 +1,5 @@
 <template>
-    <div :style="{ fontWeight: getFontWeight, color: getColor }">
+    <div class="day" :class="classObject" :style="styleObject">
             {{ dayFormat }}
     </div>
 </template>
@@ -13,10 +13,6 @@
                 type: Object,
                 required: true
             },
-            currentDay: {
-                type: Object,
-                required: true
-            }
         },
 
         computed: {
@@ -41,13 +37,37 @@
              * @returns {boolean}
              */
             isCurrentDay() {
-                return this.currentDay.format('YYYY-MM-DD') === this.dayFormat;
+                return this.day.isSame(this.$moment(),'day');
+            },
+            isBeforeCurrentDay() {
+              return this.day.isBefore(this.$moment(),'day');
             },
             /**
              * grey out day out side this month
              */
             isDayOutsideCurrentMonth() {
-                return this.currentDay.format('MMMM') !== this.day.format('MMMM');
+                return !this.day.isSame(this.$moment(),'month');
+            },
+            /**
+             * return the classes required
+             * @returns {{day: boolean, today: computed.isCurrentDay}}
+             */
+            classObject() {
+                return {
+                    day: true,
+                    today: this.isCurrentDay,
+                    past: this.isBeforeCurrentDay
+                }
+            },
+            /**
+             * return the styles required
+             * @returns {{fontWeight: computed.getFontWeight, color: computed.getColor}}
+             */
+            styleObject() {
+                return {
+                    fontWeight: this.getFontWeight,
+                    color: this.getColor
+                }
             }
         }
     }
