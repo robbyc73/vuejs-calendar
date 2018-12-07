@@ -1,8 +1,6 @@
 <template>
-    <div>
-        <span :style="{ fontWeight: getFontWeight, color: getColor }">
-            {{ dayInYearMonthDayFormat }}
-        </span>
+    <div :style="{ fontWeight: getFontWeight, color: getColor }">
+            {{ dayFormat }}
     </div>
 </template>
 <script>
@@ -25,8 +23,8 @@
             /**
              * get the formatted day string
              */
-            dayInYearMonthDayFormat() {
-                return this.day.format('YYYY-MM-DD');
+            dayFormat() {
+                return this.day.format('D');
             },
             /**
              * font weight is bold for current day
@@ -43,7 +41,7 @@
              * @returns {boolean}
              */
             isCurrentDay() {
-                return this.currentDay.format('YYYY-MM-DD') === this.dayInYearMonthDayFormat;
+                return this.currentDay.format('YYYY-MM-DD') === this.dayFormat;
             },
             /**
              * grey out day out side this month

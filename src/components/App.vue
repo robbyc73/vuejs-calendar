@@ -1,8 +1,7 @@
 <template>
-    <div>
-        <div v-for="week in weeks">
-            Week
-            <div v-for="day in week">
+    <div id="calendar">
+        <div  v-for="week in weeks" class="calendar-week">
+            <div class="day" v-for="day in week">
                 <calendar-day :day="day" :currentDay="currentDay"></calendar-day>
             </div>
         </div>
