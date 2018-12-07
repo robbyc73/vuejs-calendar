@@ -38,6 +38,7 @@
                 //days on month
                 daysIMonth: this.$moment().daysInMonth(),
 
+
                 //current day
                 currentDay: this.$moment(),
 
@@ -52,6 +53,9 @@
             year() {
                 return this.$store.state.currentYear;
             },
+            getCurrentDaysInMonth() {
+              return this.$moment(this.$store.state.currentMonth,'MMMM').daysInMonth()
+            },
             /**
              * get days in month including days falling within week before/after end of month
              * @returns {Array}
@@ -59,7 +63,7 @@
             days() {
                 let arrDays = [];
                 let startDay = 1;
-                while(startDay <= this.daysIMonth) {
+                while(startDay <= this.getCurrentDaysInMonth) {
                     let dayInMonth = this.$moment().date(startDay);
                     arrDays.push(dayInMonth);
                     startDay++;
