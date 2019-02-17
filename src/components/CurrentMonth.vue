@@ -3,8 +3,8 @@
     <!-- current month component here -->
     {{ month }}
     {{ year }}
-    <button>+</button>
-    <button>-</button>
+    <button @click="incrementMonth">+</button>
+    <button @click="decrementMonth">-</button>
     </div>
 </template>
 <script>
@@ -12,11 +12,19 @@
         name: 'current-month',
         computed: {
             month() {
-                return this.$store.state.currentMonth;
+                return this.$store.state.current.format('MMMM');
             },
             year() {
-                return this.$store.state.currentYear;
+                return this.$store.state.current.format('YYYY');
             },
+        },
+        methods: {
+            incrementMonth() {
+                this.$store.commit('incrementMonth');
+            },
+            decrementMonth() {
+                this.$store.commit('decrementMonth');
+            }
         }
 
     }

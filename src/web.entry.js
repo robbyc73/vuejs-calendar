@@ -9,16 +9,14 @@ Object.defineProperty(Vue.prototype,'$moment',{ get() {return this.$root.moment}
 
 const store = new Vuex.Store({
     state: {
-        currentYear: moment().format('YYYY'),
-        currentMonth: moment().format('MMMM')
+        current: moment(),
     },
     mutations: {
-        nextMonth (state) {
-            //commit()
-           // state.count++
+        incrementMonth(state) {
+            state.current.add(1, 'months').calendar();
         },
-        previousMonth(state) {
-
+        decrementMonth(state) {
+            state.current.subtract(1, 'months').calendar();
         }
     }
 })

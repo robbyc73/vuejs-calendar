@@ -17,9 +17,7 @@
     </div>
     <div id="calendar">
         <div  v-for="week in weeks" class="calendar-week">
-            <template v-for="day in week">
-                <calendar-day :day="day"></calendar-day>
-            </template>
+                <calendar-day :day="day" v-for="day in week"></calendar-day>
         </div>
     </div>
     </div>
@@ -48,13 +46,13 @@
 
         computed: {
             month() {
-                return this.$store.state.currentMonth;
+                return this.$store.state.current.format('MMMM');
             },
             year() {
-                return this.$store.state.currentYear;
+                return this.$store.state.current.format('YYYY');
             },
             getCurrentDaysInMonth() {
-              return this.$moment(this.$store.state.currentMonth,'MMMM').daysInMonth()
+              return this.$store.state.current.daysInMonth();
             },
             /**
              * get days in month including days falling within week before/after end of month
