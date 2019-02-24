@@ -62,8 +62,8 @@
                 let arrDays = [];
                 let startDay = 1;
                 while(startDay <= this.getCurrentDaysInMonth) {
-                    let dayInMonth = this.$moment().date(startDay);
-                    arrDays.push(dayInMonth);
+                    let dayInMonth = this.$store.state.current.date(startDay);
+                    arrDays.push(dayInMonth.clone());
                     startDay++;
                 }
 
@@ -71,23 +71,25 @@
                 let lastDayInMonth = arrDays[arrDays.length-1];
 
                 // figure out whereabouts in week the first day moment object is
-                let dayInWeek = firstDayInMonth.isoWeekday();
+                let dayInWeek = firstDayInMonth.weekday();
                 let arrDaysInWeekBeforeStartOfMonth = [];
 
-                let dayBeforeDayInWeek = 1;
+                let dayBeforeDayInWeek = 0;
                 while(dayBeforeDayInWeek < dayInWeek) {
-                    arrDaysInWeekBeforeStartOfMonth.push(this.$moment(firstDayInMonth).subtract((dayInWeek - dayBeforeDayInWeek),"days"));
+                    let firstDayInMonthCopy = firstDayInMonth.clone();
+                    arrDaysInWeekBeforeStartOfMonth.push(this.$moment(firstDayInMonthCopy).subtract((dayInWeek - dayBeforeDayInWeek),"days"));
                     dayBeforeDayInWeek++;
                 }
 
                 arrDays = arrDaysInWeekBeforeStartOfMonth.concat(arrDays);
 
                 // figure out whereabouts in week last day moment object is
-                dayInWeek = lastDayInMonth.isoWeekday();
+                dayInWeek = lastDayInMonth.weekday();
                 let dayIncr = 1;
 
-                while(dayInWeek <= 7) {
-                    arrDays.push(this.$moment(lastDayInMonth).add(dayIncr,"days"));
+                while(dayInWeek <= 8) {
+                    let lastDayInMonthCopy = lastDayInMonth.clone();
+                    arrDays.push(this.$moment(lastDayInMonthCopy).add(dayIncr,"days"));
                     dayIncr++;
                     dayInWeek++;
                 }
