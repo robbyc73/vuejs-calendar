@@ -1,5 +1,5 @@
 <template>
-    <div class="day" :class="classObject" :style="styleObject">
+    <div @click="captureMouseClickPosition" class="day" :class="classObject" :style="styleObject">
             {{ dayFormat }}
     </div>
 </template>
@@ -68,6 +68,11 @@
                     fontWeight: this.getFontWeight,
                     color: this.getColor
                 }
+            }
+        },
+        methods: {
+            captureMouseClickPosition(event) {
+                this.$emit('sendClickPosition',{ clientX: event.clientX, clientY: event.clientY});
             }
         }
     }
