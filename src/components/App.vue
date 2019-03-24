@@ -17,12 +17,10 @@
     </div>
     <div id="calendar">
         <div  v-for="week in weeks" class="calendar-week">
-                <calendar-day @sendClickPosition="openEventForm" :day="day" v-for="day in week"></calendar-day>
+                <calendar-day :day="day" v-for="day in week"></calendar-day>
         </div>
     </div>
-        <event-form :value="showEventForm"
-                    :event-form-position-x="eventFormPositionX"
-                    :event-form-position-y="eventFormPositionY">
+        <event-form :value="getShowEventForm">
         </event-form>
     </div>
 </template>
@@ -45,12 +43,13 @@
                 currentDay: this.$moment(),
                 daysInWeek: this.$moment.weekdays(),
                 showEventForm: false,
-                eventFormPositionX: 0,
-                eventFormPositionY: 0
             };
         },
 
         computed: {
+            getShowEventForm() {
+              return this.$store.state.showEventForm;
+            },
             month() {
                 return this.$store.state.current.format('MMMM');
             },
@@ -122,12 +121,6 @@
             },
         },
         methods: {
-            openEventForm(clickInfo){
-                this.showEventForm = true;
-                //TODO maybe put in store, or possible to use native click event on calendar day component?
-                this.eventFormPositionX = clickInfo.clientX;
-                this.eventFormPositionY = clickInfo.clientY;
-            }
         }
     }
 </script>

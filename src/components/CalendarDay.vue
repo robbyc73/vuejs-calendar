@@ -1,5 +1,5 @@
 <template>
-    <div @click="captureMouseClickPosition" class="day" :class="classObject" :style="styleObject">
+    <div @click="openShowEventForm" class="day" :class="classObject" :style="styleObject">
             {{ dayFormat }}
     </div>
 </template>
@@ -71,8 +71,14 @@
             }
         },
         methods: {
-            captureMouseClickPosition(event) {
-                this.$emit('sendClickPosition',{ clientX: event.clientX, clientY: event.clientY});
+            /**
+             * open the event form at the clicked position
+             * @param event
+             */
+            openShowEventForm(event) {
+                this.$store.commit('updatePosition',{ positionX: event.clientX, positionY: event.clientY})
+                this.$store.commit('updateShowEventForm',true);
+                this.$store.commit('updateEventDate',this.day.format('YYYY-MM-DD'))
             }
         }
     }
