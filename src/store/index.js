@@ -13,9 +13,11 @@ export default new Vuex.Store({
         showEventForm: false,
         eventDate: null,
         // key events by YYYY-MM-DD
-        events:[
+        events:{
 
-        ]
+        }
+
+
     },
     mutations: {
         /**
@@ -53,21 +55,40 @@ export default new Vuex.Store({
             state.eventDate = payload;
         },
         /**
-         * update the events store state, if a key exists then create a new array element
+         * add event to store state, if a key exists then create a new array element
          * otherwise push onto
          * @param state
          * @param payload
          */
         updateEvents(state,payload) {
-               console.log("payload is "+JSON.stringify(payload));
+                   //event date doesnt exist, then add
+                   if(state.events[payload.eventDate] === undefined) {
+                       state.events[payload.eventDate] = [];
+                       state.events[payload.eventDate].push({uuid: payload.eventUuid, text: payload.eventText});
+                       return true;
+                   }
 
-                    state.events.push(payload);
+                   //check if the event already exists in the events, then updating
+                   let updatedExistingEvent = false;
+                    state.events[payload.eventDate].forEach(function(event){
+                            if(event.uuid === payload.eventUuid) {
+                                event.text = payload.eventText;
+                                updatedExistingEvent = true;
+                            }
+                    });
 
-                    //state.events[payload.eventDate].push(payload.eventText);
+                    // date exists in events and different event, then add
+                    if(!updatedExistingEvent) {
+                        state.events[payload.eventDate].push({uuid: payload.eventUuid, text: payload.eventText});
+                    }
 
-                //console.log("length is "+state.events[payload.eventDate].length);
+            return true;
+        },
+
+        removeEvent(state,payload) {
 
         }
+
 
     }
 })

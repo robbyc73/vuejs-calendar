@@ -11,6 +11,7 @@
     </div>
 </template>
 <script>
+    import { uuid } from 'vue-uuid';
     export default {
         data() {
             return {
@@ -53,7 +54,7 @@
                 this.$store.commit('updateShowEventForm',false);
             },
             saveEvent() {
-                this.$store.commit('updateEvents',{eventDate: this.$store.state.eventDate, eventText: this.eventText});
+                this.$store.commit('updateEvents',{eventDate: this.$store.state.eventDate, eventText: this.eventText, eventUuid: this.$uuid.v4()});
                 this.closeEventForm();
             }
 

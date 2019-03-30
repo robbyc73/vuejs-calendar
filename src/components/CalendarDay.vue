@@ -1,6 +1,11 @@
 <template>
     <div @click="openShowEventForm" class="day" :class="classObject" :style="styleObject">
             {{ dayFormat }}
+        <ul class="event-list">
+            <li v-for="event in events">
+                {{ event.text }}
+            </li>
+        </ul>
     </div>
 </template>
 <script>
@@ -68,7 +73,19 @@
                     fontWeight: this.getFontWeight,
                     color: this.getColor
                 }
-            }
+            },
+            /**
+             * events for the current day
+             */
+            events() {
+                console.log("store updated");
+                if(this.$store.state.events[this.day.format('YYYY-MM-DD')] !== undefined) {
+                    console.log("found event");
+                    return this.$store.state.events[this.day.format('YYYY-MM-DD')];
+                }
+
+                return [];
+            },
         },
         methods: {
             /**
@@ -79,7 +96,7 @@
                 this.$store.commit('updatePosition',{ positionX: event.clientX, positionY: event.clientY})
                 this.$store.commit('updateShowEventForm',true);
                 this.$store.commit('updateEventDate',this.day.format('YYYY-MM-DD'))
-            }
+            },
         }
     }
 </script>
