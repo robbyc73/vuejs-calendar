@@ -4,7 +4,7 @@
         <h4>Add Event</h4>
 
         <button @click="closeEventForm()" id="close-button">&#10005</button>
-        <div>
+        <div class="text">
             <input v-model="eventText" type="text">
             <button :disabled="eventTextEmpty" @click="saveEvent()">Save Event</button>
         </div>
@@ -29,7 +29,13 @@
                 return this.eventText === '';
             },
             isActive() {
+                if(this.value) {
+                    this.eventText = this.getEventText;
+                } else {
+                    this.eventText = '';
+                }
                 return this.value;
+
             },
             /**
              * position of event form from top
@@ -44,6 +50,21 @@
              */
             left(){
                 return `${this.$store.state.eventFormPositionX}px`;
+            },
+            /**
+             * get event text based on if edit element event id present
+             */
+            getEventText() {
+                if(this.$store.state.editEventElementId !== "") {
+
+                    let event = this.$store.state.events.find(event => event.uuid === this.$store.state.editEventElementId);
+
+                    if (event !== undefined) {
+                        return event.text;
+                    }
+                     return '';
+                }
+                return '';
             }
         },
         methods: {
@@ -52,12 +73,27 @@
              */
             closeEventForm() {
                 this.$store.commit('updateShowEventForm',false);
+                this.resetEditElementEventId();
             },
+            /**
+             * commit the new event to the store
+             */
             saveEvent() {
-                this.$store.commit('updateEvents',{eventDate: this.$store.state.eventDate, eventText: this.eventText, eventUuid: this.$uuid.v4()});
+                let eventUuid = this.$uuid.v4();
+                if(this.$store.state.editEventElementId !== "") {
+                    eventUuid = this.$store.state.editEventElementId;
+                }
+                this.$store.commit('updateEvents',{date: this.$store.state.eventDate, text: this.eventText, uuid: eventUuid});
                 this.closeEventForm();
-            }
 
+            },
+
+            /**
+             * reset the edit element id in the store after event form closed
+             */
+            resetEditElementEventId() {
+                this.$store.commit('updateEditEventElementId',{ elementId: ''});
+            }
         },
         name: 'event-form'
     }

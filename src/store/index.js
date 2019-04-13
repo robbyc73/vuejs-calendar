@@ -11,11 +11,13 @@ export default new Vuex.Store({
         eventFormPositionX: 0,
         eventFormPositionY: 0,
         showEventForm: false,
+        editEventElementId: "",
         eventDate: null,
-        // key events by YYYY-MM-DD
-        events:{
+        events:[
 
-        }
+        ]
+
+
 
 
     },
@@ -51,6 +53,9 @@ export default new Vuex.Store({
         updateShowEventForm(state,payload) {
             state.showEventForm = payload;
         },
+        updateEditEventElementId(state,payload) {
+            state.editEventElementId = payload.elementId;
+        },
         updateEventDate(state,payload) {
             state.eventDate = payload;
         },
@@ -61,25 +66,19 @@ export default new Vuex.Store({
          * @param payload
          */
         updateEvents(state,payload) {
-                   //event date doesnt exist, then add
-                   if(state.events[payload.eventDate] === undefined) {
-                       state.events[payload.eventDate] = [];
-                       state.events[payload.eventDate].push({uuid: payload.eventUuid, text: payload.eventText});
-                       return true;
-                   }
 
                    //check if the event already exists in the events, then updating
                    let updatedExistingEvent = false;
-                    state.events[payload.eventDate].forEach(function(event){
-                            if(event.uuid === payload.eventUuid) {
-                                event.text = payload.eventText;
+                    state.events.forEach(function(event){
+                            if(event.uuid === payload.uuid) {
+                                event.text = payload.text;
                                 updatedExistingEvent = true;
                             }
                     });
 
                     // date exists in events and different event, then add
                     if(!updatedExistingEvent) {
-                        state.events[payload.eventDate].push({uuid: payload.eventUuid, text: payload.eventText});
+                        state.events.push(payload);
                     }
 
             return true;

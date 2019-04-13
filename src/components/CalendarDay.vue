@@ -2,7 +2,7 @@
     <div @click="openShowEventForm" class="day" :class="classObject" :style="styleObject">
             {{ dayFormat }}
         <ul class="event-list">
-            <li v-for="event in events">
+            <li v-for="event in events" :id="event.uuid" :key="event.uuid">
                 {{ event.text }}
             </li>
         </ul>
@@ -78,13 +78,7 @@
              * events for the current day
              */
             events() {
-                console.log("store updated");
-                if(this.$store.state.events[this.day.format('YYYY-MM-DD')] !== undefined) {
-                    console.log("found event");
-                    return this.$store.state.events[this.day.format('YYYY-MM-DD')];
-                }
-
-                return [];
+                return this.$store.state.events.filter(event => event.date === this.day.format('YYYY-MM-DD'));
             },
         },
         methods: {
@@ -93,7 +87,13 @@
              * @param event
              */
             openShowEventForm(event) {
-                this.$store.commit('updatePosition',{ positionX: event.clientX, positionY: event.clientY})
+
+                let addEvent = true;
+                if(event.srcElement.nodeName === 'LI') {
+                    let addEvent = false;
+                }
+                this.$store.commit('updatePosition',{ positionX: event.clientX, positionY: event.clientY});
+                this.$store.commit('updateEditEventElementId',{ elementId: event.srcElement.id})
                 this.$store.commit('updateShowEventForm',true);
                 this.$store.commit('updateEventDate',this.day.format('YYYY-MM-DD'))
             },
