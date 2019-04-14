@@ -1,12 +1,17 @@
 <template>
 
     <div id="event-form" :class="{ active: isActive }" :style="{ top: top, left: left }">
-        <h4>Add Event</h4>
+        <h4>{{saveEventButtonText}} Event</h4>
 
         <button @click="closeEventForm()" id="close-button">&#10005</button>
         <div class="text">
-            <input v-model="eventText" type="text">
-            <button :disabled="eventTextEmpty" @click="saveEvent()">Save Event</button>
+            <p>
+            {{ eventDateText }}
+            </p>
+            <input v-focus v-model="eventText" type="text" @keyup.enter="saveEvent()">
+        </div>
+        <div class="buttons">
+            <button class="button" :disabled="eventTextEmpty" @click="saveEvent()">{{saveEventButtonText}}</button>
         </div>
     </div>
 </template>
@@ -25,8 +30,23 @@
             },
         },
         computed : {
+            /**
+             * output the event date in display format
+             */
+            eventDateText() {
+                if(this.isActive) {
+                    return this.$store.state.eventDate.format('dddd MMM Do');
+                }
+                return '';
+            },
+            /**
+             * check event text empty
+             */
             eventTextEmpty() {
                 return this.eventText === '';
+            },
+            saveEventButtonText() {
+                return this.$store.state.editEventElementId === "" ? 'Create' : 'Update';
             },
             isActive() {
                 if(this.value) {
@@ -37,6 +57,7 @@
                 return this.value;
 
             },
+
             /**
              * position of event form from top
              * @returns {string}
@@ -69,31 +90,44 @@
         },
         methods: {
             /**
-             * send the signal to close the event form
+             * send the signal to close the event form and reset
              */
             closeEventForm() {
-                this.$store.commit('updateShowEventForm',false);
-                this.resetEditElementEventId();
+                this.$store.commit('updateEventForm',
+                    {
+                        positionX: 0,
+                        positionY: 0,
+                        elementId: null,
+                        editEventElementId: '',
+                        showEventForm: false,
+                        eventDate: null
+                    }
+                );
             },
             /**
              * commit the new event to the store
              */
             saveEvent() {
-                let eventUuid = this.$uuid.v4();
-                if(this.$store.state.editEventElementId !== "") {
-                    eventUuid = this.$store.state.editEventElementId;
+                if(!this.eventTextEmpty) {
+                    let eventUuid = this.$uuid.v4();
+                    if (this.$store.state.editEventElementId !== "") {
+                        eventUuid = this.$store.state.editEventElementId;
+                    }
+                    this.$store.commit('updateEvents', {
+                        date: this.$store.state.eventDate,
+                        text: this.eventText,
+                        uuid: eventUuid
+                    });
+                    this.closeEventForm();
                 }
-                this.$store.commit('updateEvents',{date: this.$store.state.eventDate, text: this.eventText, uuid: eventUuid});
-                this.closeEventForm();
-
             },
-
-            /**
-             * reset the edit element id in the store after event form closed
-             */
-            resetEditElementEventId() {
-                this.$store.commit('updateEditEventElementId',{ elementId: ''});
-            }
+        },
+        directives: {
+          focus: {
+              update(el) {
+                  el.focus();
+              }
+          }
         },
         name: 'event-form'
     }

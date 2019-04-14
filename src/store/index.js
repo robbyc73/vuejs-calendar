@@ -37,6 +37,18 @@ export default new Vuex.Store({
             state.current = state.current.clone().subtract(1, 'months');
         },
         /**
+         * Update all the information required by the event form
+         * @param state
+         * @param payload
+         */
+        updateEventForm(state,payload) {
+            state.eventFormPositionX = payload.positionX;
+            state.eventFormPositionY = payload.positionY;
+            state.showEventForm = payload.showEventForm;
+            state.editEventElementId = payload.elementId;
+            state.eventDate = payload.eventDate;
+        },
+        /**
          * update position of the event form
          * @param state
          * @param payload
