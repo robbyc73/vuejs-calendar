@@ -61,7 +61,8 @@
                 return {
                     day: true,
                     today: this.isCurrentDay,
-                    past: this.isBeforeCurrentDay
+                    past: this.isBeforeCurrentDay,
+                    active: (this.$store.state.eventDate === this.day)
                 }
             },
             /**
@@ -78,7 +79,7 @@
              * events for the current day
              */
             events() {
-                return this.$store.state.events.filter(event => event.date === this.day.format('YYYY-MM-DD'));
+                return this.$store.state.events.filter(event => event.date.format('YYYY-MM-DD') === this.day.format('YYYY-MM-DD'));
             },
         },
         methods: {
@@ -87,15 +88,19 @@
              * @param event
              */
             openShowEventForm(event) {
-
-                let addEvent = true;
-                if(event.srcElement.nodeName === 'LI') {
-                    let addEvent = false;
-                }
-                this.$store.commit('updatePosition',{ positionX: event.clientX, positionY: event.clientY});
-                this.$store.commit('updateEditEventElementId',{ elementId: event.srcElement.id})
+                this.$store.commit('updateEventForm',
+                    {
+                        positionX: event.clientX,
+                        positionY: event.clientY,
+                        elementId: event.srcElement.id,
+                        showEventForm: true,
+                        eventDate: this.day
+                    }
+                );
+                /*this.$store.commit('updatePosition',{ positionX: event.clientX, positionY: event.clientY});
+                this.$store.commit('updateEditEventElementId',{ elementId: event.srcElement.id});
                 this.$store.commit('updateShowEventForm',true);
-                this.$store.commit('updateEventDate',this.day.format('YYYY-MM-DD'))
+                this.$store.commit('updateEventDate',this.day.format('YYYY-MM-DD'))*/
             },
         }
     }
