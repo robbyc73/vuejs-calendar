@@ -1,5 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import Axios from 'axios';
+
 Vue.use(Vuex);
 import moment from 'moment-timezone';
 moment.tz.setDefault('UTC');
@@ -78,22 +80,30 @@ export default new Vuex.Store({
          * @param payload
          */
         updateEvents(state,payload) {
+            state.events = payload;
 
                    //check if the event already exists in the events, then updating
-                   let updatedExistingEvent = false;
+              /*     let updatedExistingEvent = false;
+
+
                     state.events.forEach(function(event){
                             if(event.uuid === payload.uuid) {
                                 event.text = payload.text;
+
                                 updatedExistingEvent = true;
                             }
                     });
 
                     // date exists in events and different event, then add
                     if(!updatedExistingEvent) {
+
                         state.events.push(payload);
                     }
 
-            return true;
+            //Axios.post('/event',payload);
+*/
+
+           // return true;
         },
 
         removeEvent(state,payload) {
@@ -101,5 +111,16 @@ export default new Vuex.Store({
         }
 
 
+    },
+    actions: {
+        updateEvents({commit},payload) {
+            Axios.post('/event',payload).then(response => {
+                if(response.status === 200) {
+                    Axios.get('/events').then(response => {
+                        commit('updateEvents', response.data);
+                    });
+                }
+            });
+        }
     }
 })

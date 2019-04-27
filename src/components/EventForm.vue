@@ -113,7 +113,7 @@
                     if (this.$store.state.editEventElementId !== "") {
                         eventUuid = this.$store.state.editEventElementId;
                     }
-                    this.$store.commit('updateEvents', {
+                    this.$store.dispatch('updateEvents', {
                         date: this.$store.state.eventDate,
                         text: this.eventText,
                         uuid: eventUuid
