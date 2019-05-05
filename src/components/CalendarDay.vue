@@ -79,7 +79,7 @@
              * events for the current day
              */
             events() {
-                return this.$store.state.events.filter(event => event.date.format('YYYY-MM-DD') === this.day.format('YYYY-MM-DD'));
+                return this.$store.state.events.filter(event => event.date === this.day.format('YYYY-MM-DD'));
             },
         },
         methods: {
@@ -97,10 +97,6 @@
                         eventDate: this.day
                     }
                 );
-                /*this.$store.commit('updatePosition',{ positionX: event.clientX, positionY: event.clientY});
-                this.$store.commit('updateEditEventElementId',{ elementId: event.srcElement.id});
-                this.$store.commit('updateShowEventForm',true);
-                this.$store.commit('updateEventDate',this.day.format('YYYY-MM-DD'))*/
             },
         }
     }

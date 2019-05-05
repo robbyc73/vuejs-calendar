@@ -81,29 +81,6 @@ export default new Vuex.Store({
          */
         updateEvents(state,payload) {
             state.events = payload;
-
-                   //check if the event already exists in the events, then updating
-              /*     let updatedExistingEvent = false;
-
-
-                    state.events.forEach(function(event){
-                            if(event.uuid === payload.uuid) {
-                                event.text = payload.text;
-
-                                updatedExistingEvent = true;
-                            }
-                    });
-
-                    // date exists in events and different event, then add
-                    if(!updatedExistingEvent) {
-
-                        state.events.push(payload);
-                    }
-
-            //Axios.post('/event',payload);
-*/
-
-           // return true;
         },
 
         removeEvent(state,payload) {
@@ -113,14 +90,34 @@ export default new Vuex.Store({
 
     },
     actions: {
+        /**
+         * persist events to the server
+         * @param commit
+         * @param payload
+         * @returns {Promise}
+         */
         updateEvents({commit},payload) {
-            Axios.post('/event',payload).then(response => {
-                if(response.status === 200) {
-                    Axios.get('/events').then(response => {
+            return new Promise((resolve,reject) => {
+
+                Axios.post('/event',payload).then(response => {
+                    if(response.status === 200) {
                         commit('updateEvents', response.data);
-                    });
-                }
+                        resolve();
+                    } else {
+                        reject()
+                    }
+                });
+
             });
+        },
+        //getEvents()
+        /**
+         * update event form data
+         * @param commit
+         * @param payload
+         */
+        updateEventForm({commit},payload) {
+            commit('updateEventForm', payload);
         }
     }
 })

@@ -34,11 +34,12 @@ app.post('/event',(req,res) => {
     if(!updatedExistingEvent) {
         events.push(req.body);
     }
-    res.sendStatus(200);
+    res.send(events);
 });
 
 app.get('/events',(req,res) => {
-  res.send(events);
+
+  //res.send(events);
   res.sendStatus(200);
 });
 
