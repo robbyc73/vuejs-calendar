@@ -93,7 +93,7 @@
              * send the signal to close the event form and reset
              */
             closeEventForm() {
-                this.$store.commit('updateEventForm',
+                this.$store.dispatch('updateEventForm',
                     {
                         positionX: 0,
                         positionY: 0,
@@ -114,11 +114,12 @@
                         eventUuid = this.$store.state.editEventElementId;
                     }
                     this.$store.dispatch('updateEvents', {
-                        date: this.$store.state.eventDate,
+                        date: this.$store.state.eventDate.format('YYYY-MM-DD'),
                         text: this.eventText,
                         uuid: eventUuid
+                    }).then(() => {
+                        this.closeEventForm();
                     });
-                    this.closeEventForm();
                 }
             },
         },
